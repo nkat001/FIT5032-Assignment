@@ -12,21 +12,20 @@
                                 v-model="formData.email" />
                             <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
                         </div>
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <label for="password" class="form-label">Password</label><br />
-                                <input type="password" id="password" name="password" class="form-control"
-                                    @blur="() => validatePassword(true)" @input="() => validatePassword(false)"
-                                    v-model="formData.password" />
-                                <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
-                            </div>
-                            <div class="col-12 mb-3">
-                            </div>
-                            <div class="col-12 text-center mt-3">
-                                <button type="submit" class="btn btn-primary">Login</button>
-                                <p class="m-3">Don't have an account yet? <a href="">Sign Up</a></p>
-                            </div>
+                        <div class="col-12 mb-3">
+                            <label for="password" class="form-label">Password</label><br />
+                            <input type="password" id="password" name="password" class="form-control"
+                                @blur="() => validatePassword(true)" @input="() => validatePassword(false)"
+                                v-model="formData.password" />
+                            <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
                         </div>
+                        <div class="col-12 mb-3">
+                        </div>
+                        <div class="col-12 text-center mt-3">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                            <p class="m-3">Don't have an account yet? <a href="/signup">Sign Up</a></p>
+                        </div>
+
                     </div>
                 </form>
             </div>

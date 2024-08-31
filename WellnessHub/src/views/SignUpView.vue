@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-12 text-center mt-3">
                         <button type="submit" class="btn btn-primary">Sign Up</button>
-                        <p class="m-3">Already have an account? <a href="">Login</a></p>
+                        <p class="m-3">Already have an account? <a href="/login">Login</a></p>
                     </div>
                 </form>
             </div>
