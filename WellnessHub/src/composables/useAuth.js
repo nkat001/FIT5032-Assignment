@@ -9,16 +9,6 @@ export const useAuth = () => {
     const currentUser = ref(users.find(user => user.email === currentUserEmail.value));
     const userType = computed(() => currentUser.value?.userType || '');
 
-    // watch(currentUserEmail, (newEmail) => {
-    //     currentUser.value = users.find(user => user.email === newEmail);
-    // });
-
-    // watch(isAuthenticated, (newStatus) => {
-    //     if (!newStatus) {
-    //         router.push('/');
-    //     }
-    // });
-
     const login = (email, password) => {
         const user = users.find(user => user.email === email && user.password === password);
         if (user) {

@@ -2,7 +2,7 @@
   <div class="container d-flex justify-content-center">
     <div class="text-center">
       <h1 class="text-center border border-dark rounded p-3">
-        Welcome To The Wellness Hub
+        Welcome To Wellness Hub
       </h1>
       <img alt="Wellness Hub Main" class="logo my-4" src="@/assets/wellnesshubmain.jpg" />
       <div>

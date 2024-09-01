@@ -7,10 +7,7 @@
       </h1>
       <div class="text-center">
         <h2 class="font-weight-bold font-italic mt-5">Dashboard</h2>
-        <p class="text-bold mt-3">One in five Australians experience a mental health disorder in any given year. Early
-          intervention and support can make a significant difference, so don't hesitate to reach out if you or someone
-          you know needs help.</p>
-        <h4>Join Wellness Hub today and get access to a range of resource!</h4>
+        <h4>With Wellness Hub, get access to a range of resource!</h4>
       </div>
     </div>
   </div>
