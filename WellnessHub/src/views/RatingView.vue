@@ -87,8 +87,6 @@ const submitForm = () => {
     validateReview(true)
     if (!errors.value.rating && !errors.value.review) {
         const sanitizedReview = DOMPurify.sanitize(formData.value.review)
-        console.log("sani : " + sanitizedReview);
-        
         const newCard = { rating: formData.value.rating, review: sanitizedReview }
         submittedCards.value.push(newCard)
         ratings.value.push(formData.value.rating)

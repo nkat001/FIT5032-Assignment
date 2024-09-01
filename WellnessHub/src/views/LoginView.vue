@@ -7,7 +7,7 @@
                     <div class="row mb-3">
                         <div class="col-12 mb-3">
                             <label for="email" class="form-label">E-mail</label><br />
-                            <input type="email" id="email" name="email" class="form-control"
+                            <input type="email" id="email" name="email" class="form-control" autocomplete="off"
                                 @blur="() => validateEmail(true)" @input="() => validateEmail(false)"
                                 v-model="formData.email" />
                             <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
