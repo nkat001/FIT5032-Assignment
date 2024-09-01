@@ -19,14 +19,11 @@
                                 v-model="formData.password" />
                             <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
                         </div>
-                        <div class="col-12 mb-3">
-                        </div>
                         <div v-if="loginError" class="text-danger text-center">{{ loginError }}</div>
                         <div class="col-12 text-center mt-3">
                             <button type="submit" class="btn btn-primary">Login</button>
                             <p class="m-3">Don't have an account yet? <a href="/signup">Sign Up</a></p>
                         </div>
-
                     </div>
                 </form>
             </div>
@@ -35,10 +32,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useAuth } from '@/composables/useAuth';
 
-const router = useRouter()
+const { login } = useAuth()
 
 const formData = ref({
     email: '',
@@ -74,19 +71,12 @@ const submitForm = () => {
     validatePassword(true)
 
     if (!errors.value.email && !errors.value.password) {
-        const users = JSON.parse(localStorage.getItem('users')) || []
-        console.log();
-        
-        const user = users.find(user => user.email === formData.value.email && user.password === formData.value.password)
-        if (user) {
-            localStorage.setItem('isAuthenticated', 'true')
-            localStorage.setItem('currentUserEmail', formData.value.email)
-            alert('Login successfull!')
-            loginError.value = null
-            router.push('/dashboard')
-        }
-        else {
-            loginError.value = 'Invalid email or password. Please try again.'
+        const { email, password } = formData.value;
+        const result = login(email, password)
+        if (typeof result === 'string') {
+            loginError.value = result;
+        } else {
+            loginError.value = null;
         }
     }
 }

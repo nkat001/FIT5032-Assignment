@@ -3,7 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RatingView from "@/views/RatingView.vue";
 import SignUpView from "@/views/SignUpView.vue";
-import { createRouter, createWebHistory, RouterView } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
@@ -24,6 +24,7 @@ const routes = [
     path: "/review",
     name: "Review",
     component: RatingView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/dashboard",
@@ -39,8 +40,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
     if (!isAuthenticated) {
       next('/login');
     } else {
