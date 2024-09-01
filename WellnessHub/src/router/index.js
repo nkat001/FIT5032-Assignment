@@ -1,3 +1,4 @@
+import DashboardView from "@/views/DashboardView.vue";
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RatingView from "@/views/RatingView.vue";
@@ -24,11 +25,30 @@ const routes = [
     name: "Review",
     component: RatingView,
   },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: DashboardView,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (!isAuthenticated) {
+      next();
+    } else {
+      next("/login");
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

@@ -35,29 +35,19 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const formData = ref({
-    username: '',
     email: '',
-    userType: '',
     password: '',
-    confirmPassword: '',
 })
 
-const submittedCards = ref([])
 const errors = ref({
-    username: null,
     email: null,
-    userType: null,
     password: null,
-    confirmPassword: null,
 })
-
-const validateName = (blur) => {
-    if (formData.value.username.length < 3) {
-        errors.value.username = blur ? 'Username must be at least 3 characters long' : null
-    }
-}
 
 const validateEmail = (blur) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,48 +58,28 @@ const validateEmail = (blur) => {
     }
 }
 
-const validateUserType = (blur) => {
-    if (formData.value.userType === '') {
-        errors.value.userType = blur ? 'User type cannot be empty' : null
-    } else {
-        errors.value.userType = null
-    }
-}
-
 const validatePassword = (blur) => {
-    const password = formData.value.password
-    const minLength = 8
-    const hasUpperCase = /[A-Z]/.test(password)
-    const hasLowerCase = /[a-z]/.test(password)
-    const hasSpecChar = /[!@#$%&*(),.|:;]/.test(password)
-
-    if (password.length < minLength) {
-        errors.value.password = blur ? 'Password must be at least 8 characters long' : null
-    } else if (!hasUpperCase) {
-        errors.value.password = 'Password must have at least one uppercase letter'
-    } else if (!hasLowerCase) {
-        errors.value.password = 'Password must have at least one lowercase letter'
-    } else if (!hasSpecChar) {
-        errors.value.password = 'Password must have at least one special character'
+    if (formData.value.password === '') {
+        errors.value.password = blur ? 'Password cannot be empty' : null
     } else {
-        errors.value.password = null
-    }
-}
-
-const validateConfirmPassword = (blur) => {
-    if (formData.value.confirmPassword !== formData.value.password) {
-        if (blur) errors.value.confirmPassword = 'Passwords do not match'
-    } else {
-        errors.value.confirmPassword = null
+        errors.value.password = null;
     }
 }
 
 const submitForm = () => {
-    validateName(true)
+    validateEmail(true)
     validatePassword(true)
-    validateUserType(true)
-    validateUserType(true)
-    validateConfirmPassword(true)
+
+    if (!errors.value.email && !errors.value.password) {
+        const user = JSON.parse(localStorage.getItem('user'))
+        if (user && user.email === formData.value.email && user.password === formData.value.password) {
+            localStorage.setItem('isAuthenticated', 'true')
+            alert('Login successfull!')
+            router.push('/dashboard')
+        } else {
+            alert('Invalid username or password')
+        }
+    }
 }
 </script>
 

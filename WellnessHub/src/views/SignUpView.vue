@@ -68,7 +68,6 @@ const formData = ref({
     confirmPassword: '',
 })
 
-const submittedCards = ref([])
 const errors = ref({
     username: null,
     email: null,
@@ -134,6 +133,18 @@ const submitForm = () => {
     validateUserType(true)
     validateUserType(true)
     validateConfirmPassword(true)
+
+    if (!errors.value.username && !errors.value.userType && !errors.value.email && !errors.value.password && !errors.value.confirmPassword) {
+        const user = {
+            username: formData.value.username,
+            email: formData.value.email,
+            userType: formData.value.userType,
+            password: formData.value.password
+        }
+        localStorage.setItem('user', JSON.stringify(user))
+        alert('Signup successful! You can now log in.')
+        window.location.href = '/login'
+    }
 }
 </script>
 
