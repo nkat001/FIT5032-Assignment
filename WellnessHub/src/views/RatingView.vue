@@ -31,20 +31,35 @@
                         <button type="submit" class="btn btn-primary">Submit Review</button>
                     </div>
                 </form>
+                <h2 class="text-center mt-5">Average Rating: {{ averageRating }}/5</h2>
+            </div>
+        </div>
+    </div>
+    <!-- for the cards -->
+    <div class="row mt-5" v-if="submittedCards.length">
+        <div class="d-flex flex-wrap justify-content-center">
+            <div v-for="(card, index) in submittedCards" :key="index" class="card m-2" style="width: 18rem">
+                <div class="card-header">Rating</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Rating: {{ card.rating }}</li>
+                    <li class="list-group-item">Review: {{ card.review }}</li>
+                </ul>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+
+const ratings = ref(JSON.parse(localStorage.getItem('ratings')) || [])
+const submittedCards = ref(JSON.parse(localStorage.getItem('submittedCards')) || [])
 
 const formData = ref({
     rating: '',
     review: '',
 })
 
-const submittedCards = ref([])
 const errors = ref({
     rating: null,
     review: null
@@ -69,7 +84,23 @@ const validateReview = (blur) => {
 const submitForm = () => {
     validateRating(true)
     validateReview(true)
+    if (!errors.value.rating && !errors.value.review) {
+        const newCard = { ...formData.value }
+        submittedCards.value.push(newCard)
+        ratings.value.push(formData.value.rating)
+
+        localStorage.setItem('submittedCards', JSON.stringify(submittedCards.value))
+        localStorage.setItem('ratings', JSON.stringify(ratings.value))
+
+        formData.value = { rating: '', review: '' }
+    }
 }
+
+const averageRating = computed(() => {
+    if (ratings.value.length === 0) return 0
+    const sum = ratings.value.reduce((acc, rating) => acc + parseFloat(rating), 0)
+    return (sum / ratings.value.length).toFixed(2)
+})
 </script>
 
 <style scoped>
@@ -80,7 +111,7 @@ const submitForm = () => {
 }
 
 .card-header {
-    background-color: #275fda;
+    background-color: #729cf7;
     color: white;
     padding: 10px;
     border-radius: 10px 10px 0 0;
