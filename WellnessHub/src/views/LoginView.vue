@@ -21,6 +21,7 @@
                         </div>
                         <div class="col-12 mb-3">
                         </div>
+                        <div v-if="loginError" class="text-danger text-center">{{ loginError }}</div>
                         <div class="col-12 text-center mt-3">
                             <button type="submit" class="btn btn-primary">Login</button>
                             <p class="m-3">Don't have an account yet? <a href="/signup">Sign Up</a></p>
@@ -49,6 +50,8 @@ const errors = ref({
     password: null,
 })
 
+const loginError = ref(null)
+
 const validateEmail = (blur) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.value.email)) {
@@ -75,9 +78,10 @@ const submitForm = () => {
         if (user && user.email === formData.value.email && user.password === formData.value.password) {
             localStorage.setItem('isAuthenticated', 'true')
             alert('Login successfull!')
+            loginError.value = null
             router.push('/dashboard')
         } else {
-            alert('Invalid username or password')
+            loginError.value = 'Invalid email or password. Please try again.'
         }
     }
 }

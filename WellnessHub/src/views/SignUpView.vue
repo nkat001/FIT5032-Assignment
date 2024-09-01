@@ -24,8 +24,8 @@
                             <select id="userType" class="form-select" v-model="formData.userType"
                                 @blur="() => validateUserType(true)" @input="() => validateUserType(false)">
                                 <option value="" disabled>Select User Type</option>
-                                <option value="patient">Patient</option>
-                                <option value="staff">Staff</option>
+                                <option value="Patient">Patient</option>
+                                <option value="Staff">Staff</option>
                             </select>
                             <div v-if="errors.userType" class="text-danger">{{ errors.userType }}</div>
                         </div>

@@ -42,9 +42,9 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
     if (!isAuthenticated) {
-      next();
+      next('/login');
     } else {
-      next("/login");
+      next();
     }
   } else {
     next();
