@@ -74,13 +74,18 @@ const submitForm = () => {
     validatePassword(true)
 
     if (!errors.value.email && !errors.value.password) {
-        const user = JSON.parse(localStorage.getItem('user'))
-        if (user && user.email === formData.value.email && user.password === formData.value.password) {
+        const users = JSON.parse(localStorage.getItem('users')) || []
+        console.log();
+        
+        const user = users.find(user => user.email === formData.value.email && user.password === formData.value.password)
+        if (user) {
             localStorage.setItem('isAuthenticated', 'true')
+            localStorage.setItem('currentUserEmail', formData.value.email)
             alert('Login successfull!')
             loginError.value = null
             router.push('/dashboard')
-        } else {
+        }
+        else {
             loginError.value = 'Invalid email or password. Please try again.'
         }
     }

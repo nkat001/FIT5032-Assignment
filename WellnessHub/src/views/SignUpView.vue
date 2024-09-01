@@ -135,13 +135,14 @@ const submitForm = () => {
     validateConfirmPassword(true)
 
     if (!errors.value.username && !errors.value.userType && !errors.value.email && !errors.value.password && !errors.value.confirmPassword) {
-        const user = {
+        let users=JSON.parse(localStorage.getItem('users')) || []
+        users.push({
             username: formData.value.username,
             email: formData.value.email,
             userType: formData.value.userType,
             password: formData.value.password
-        }
-        localStorage.setItem('user', JSON.stringify(user))
+        })
+        localStorage.setItem('users', JSON.stringify(users))
         alert('Signup successful! You can now log in.')
         window.location.href = '/login'
     }
