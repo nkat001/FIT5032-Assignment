@@ -51,6 +51,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import DOMPurify from 'dompurify';
 
 const ratings = ref(JSON.parse(localStorage.getItem('ratings')) || [])
 const submittedCards = ref(JSON.parse(localStorage.getItem('submittedCards')) || [])
@@ -85,7 +86,10 @@ const submitForm = () => {
     validateRating(true)
     validateReview(true)
     if (!errors.value.rating && !errors.value.review) {
-        const newCard = { ...formData.value }
+        const sanitizedReview = DOMPurify.sanitize(formData.value.review)
+        console.log("sani : " + sanitizedReview);
+        
+        const newCard = { rating: formData.value.rating, review: sanitizedReview }
         submittedCards.value.push(newCard)
         ratings.value.push(formData.value.rating)
 
