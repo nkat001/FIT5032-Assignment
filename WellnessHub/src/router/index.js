@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RatingView from "@/views/RatingView.vue";
 import SignUpView from "@/views/SignUpView.vue";
+import FirebaseSignUpView from "@/views/FirebaseSignUpView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     component: DashboardView,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/firebase-signup",
+    name: "FirebaseSignUp",
+    component: FirebaseSignUpView,
+  },
 ];
 
 const router = createRouter({
@@ -40,11 +46,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isAuthenticated) {
-      next('/login');
+      next("/login");
     } else {
       next();
     }
