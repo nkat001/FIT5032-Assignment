@@ -5,25 +5,25 @@
                 <li class="nav-item">
                     <router-link to="/" class="nav-link me-3" active-class="active">Home</router-link>
                 </li>
+
                 <li class="nav-item">
-                    <router-link v-if="!isAuthenticated" to="/signup" class="nav-link" active-class="active">Sign
+                    <router-link to="/firebase-signup" class="nav-link" active-class="active">Firebase Sign
                         Up</router-link>
                 </li>
-                <li class="nav-item">
-                    <router-link to="/firebase-signup" class="nav-link me-3" active-class="active">Firebase Sign
-                        Up</router-link>
-                </li>
+
                 <li class="nav-item">
                     <router-link to="/dashboard" class="nav-link" active-class="active"
-                        v-if="isAuthenticated">Dashboard</router-link>
+                        v-if="isUserAuthenticated">Dashboard</router-link>
                 </li>
                 <li class="nav-item">
                     <router-link to="/review" class="nav-link" active-class="active"
-                        v-if="isAuthenticated && userType === 'Patient'">Submit A Review</router-link>
+                        v-if="isUserAuthenticated && userType === 'Patient'">Submit A Review</router-link>
                 </li>
                 <li class="nav-item ms-3">
-                    <button class="btn btn-danger" v-if="isAuthenticated" @click="logout">Logout</button>
-                    <router-link v-else to="/login" class="nav-link" active-class="active">Login</router-link>
+                    <button class="btn btn-danger" v-if="isUserAuthenticated" @click="logout">Logout</button>
+                    <router-link v-else to="/firebase-login" class="nav-link me" active-class="active">Firebase
+                        Login</router-link>
+
                 </li>
             </ul>
         </header>
@@ -31,7 +31,24 @@
 </template>
 
 <script setup>
-import { useAuth } from '@/composables/useAuth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { ref } from 'vue';
 
-const { isAuthenticated, userType, logout } = useAuth();
+const auth = getAuth()
+const isUserAuthenticated = ref(false)
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        isUserAuthenticated.value = !!user;
+    }
+})
+
+function logout() {
+    auth.signOut().then(() => {
+        console.log("Logged out");
+        window.location.href = '/'
+    }).catch((error) => {
+        console.log("Error occured while logging out: ", error);
+    })
+}
 </script>

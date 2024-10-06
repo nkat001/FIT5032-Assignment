@@ -5,21 +5,13 @@ import RatingView from "@/views/RatingView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import FirebaseSignUpView from "@/views/FirebaseSignUpView.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import FirebaseLoginView from "@/views/FirebaseLoginView.vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 const routes = [
   {
     path: "/",
     name: "Home",
     component: HomeView,
-  },
-  {
-    path: "/signup",
-    name: "Signup",
-    component: SignUpView,
-  },
-  {
-    path: "/login",
-    name: "Login",
-    component: LoginView,
   },
   {
     path: "/review",
@@ -38,6 +30,11 @@ const routes = [
     name: "FirebaseSignUp",
     component: FirebaseSignUpView,
   },
+  {
+    path: "/firebase-login",
+    name: "FirebaseLogin",
+    component: FirebaseLoginView,
+  },
 ];
 
 const router = createRouter({
@@ -46,14 +43,18 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  let isAuthenticated = false;
+  const auth = getAuth();
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      next("/login");
-    } else {
-      next();
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        isAuthenticated = true;
+        next();
+      } else {
+        next("/firebase-login");
+      }
+    });
   } else {
     next();
   }

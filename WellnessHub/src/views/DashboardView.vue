@@ -1,9 +1,9 @@
 <template>
   <div class="container d-flex justify-content-center">
     <div>
-      <h6 class="mt-5 text-primary text-bold">Logged in as {{ userEmail }} ({{ currentUser.userType }})</h6>
+      <h6 class="mt-5 text-primary text-bold">Logged in as {{ userEmail }} (put user type here)</h6>
       <h1 class="text-center border border-dark rounded p-3">
-        Welcome Back, {{ currentUser.username }}!
+        Welcome Back, (put name here)!
       </h1>
       <div class="text-center">
         <h2 class="font-weight-bold font-italic mt-5">Dashboard</h2>
@@ -14,11 +14,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-const users = JSON.parse(localStorage.getItem('users')) || []
-const currentUserEmail = localStorage.getItem('currentUserEmail')
-const currentUser = ref(users.find(user => user.email === currentUserEmail))
-const userEmail = computed(() => currentUser.value.email)
+import { getAuth } from 'firebase/auth';
+
+const auth = getAuth();
+const userEmail = auth.currentUser.email;
 </script>
 
 <style scoped>
