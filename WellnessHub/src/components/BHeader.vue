@@ -3,6 +3,9 @@
         <header class="d-flex justify-content-center py-3">
             <ul class="nav nav-pills">
                 <li class="nav-item">
+                    <router-link to="/" class="nav-link me-3" active-class="active">Home</router-link>
+                </li>
+                <li class="nav-item">
                     <router-link v-if="!isAuthenticated" to="/signup" class="nav-link" active-class="active">Sign
                         Up</router-link>
                 </li>

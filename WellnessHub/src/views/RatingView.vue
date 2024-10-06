@@ -53,7 +53,7 @@
 import { computed, ref } from 'vue'
 import DOMPurify from 'dompurify';
 
-const ratings = ref(JSON.parse(localStorage.getItem('ratings')) || [])
+const ratings = ref(JSON.parse(localStorage.getItem('ratings')) || []) // JSON to JS
 const submittedCards = ref(JSON.parse(localStorage.getItem('submittedCards')) || [])
 
 const formData = ref({
@@ -87,6 +87,9 @@ const submitForm = () => {
     validateReview(true)
     if (!errors.value.rating && !errors.value.review) {
         const sanitizedReview = DOMPurify.sanitize(formData.value.review)
+        console.log("Unsanitized review: " + formData.value.review);
+        console.log("Sanitized review: " + sanitizedReview);
+
         const newCard = { rating: formData.value.rating, review: sanitizedReview }
         submittedCards.value.push(newCard)
         ratings.value.push(formData.value.rating)

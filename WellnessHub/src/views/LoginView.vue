@@ -75,6 +75,7 @@ const submitForm = () => {
         const result = login(email, password)
         if (typeof result === 'string') {
             loginError.value = result;
+            window.location.href = '/dashboard'
         } else {
             loginError.value = null;
         }

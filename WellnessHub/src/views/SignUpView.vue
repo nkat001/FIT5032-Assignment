@@ -74,6 +74,7 @@ const errors = ref({
     userType: null,
     password: null,
     confirmPassword: null,
+    userExists: null, // New error for checking if user already exists
 })
 
 const validateName = (blur) => {
@@ -127,15 +128,27 @@ const validateConfirmPassword = (blur) => {
     }
 }
 
+const checkIfUserExists = (email) => {
+    const users = JSON.parse(localStorage.getItem('users')) || []
+    return users.some(user => user.email === email)  // Check if the email exists
+}
+
 const submitForm = () => {
     validateName(true)
+    validateEmail(true)
+    validateUserType(true)
     validatePassword(true)
-    validateUserType(true)
-    validateUserType(true)
     validateConfirmPassword(true)
 
-    if (!errors.value.username && !errors.value.userType && !errors.value.email && !errors.value.password && !errors.value.confirmPassword) {
-        let users=JSON.parse(localStorage.getItem('users')) || []
+    // Check if the user with the same email already exists
+    if (checkIfUserExists(formData.value.email)) {
+        errors.value.email = 'Email is already registered'
+        return
+    }
+
+    // Check if there are any validation errors
+    if (!errors.value.username && !errors.value.email && !errors.value.userType && !errors.value.password && !errors.value.confirmPassword) {
+        let users = JSON.parse(localStorage.getItem('users')) || []
         users.push({
             username: formData.value.username,
             email: formData.value.email,
