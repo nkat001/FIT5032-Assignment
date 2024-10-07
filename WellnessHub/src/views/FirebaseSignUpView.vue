@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
                 <h1 class="p-5 text-center">Sign Up</h1>
-                <form @submit.prevent="submitForm">
+                <form @submit.prevent="signUp">
                     <div class="row mb-3">
                         <div class="col-12 mb-3">
                             <label for="username" class="form-label">Username</label><br />
@@ -60,6 +60,8 @@
 <script setup>
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import { useRouter } from 'vue-router';
 
 const formData = ref({
     username: '',
@@ -79,6 +81,8 @@ const errors = ref({
 })
 
 const auth = getAuth()
+const router = useRouter()
+const firestore = getFirestore()
 
 const validateName = (blur) => {
     if (formData.value.username.length < 3) {
@@ -132,24 +136,33 @@ const validateConfirmPassword = (blur) => {
 }
 
 
-const submitForm = () => {
+const signUp = () => {
     validateName(true)
     validateEmail(true)
     validateUserType(true)
     validatePassword(true)
     validateConfirmPassword(true)
 
-
-    // Check if there are any validation errors
-    if (!errors.value.username && !errors.value.email && !errors.value.userType && !errors.value.password && !errors.value.confirmPassword) {
-        createUserWithEmailAndPassword(auth, email.value, password.value)
-            .then(() => {
-                alert('Signup successful! You can now log in.')
-                window.location.href = '/login'
-            }).catch((error) => {
-                console.log("Error occured: ", error);
-                alert('Error signing up')
-            })
+    try {
+        if (!errors.value.username && !errors.value.email && !errors.value.userType && !errors.value.password && !errors.value.confirmPassword) {
+            createUserWithEmailAndPassword(auth, email.value, password.value)
+                .then(async (userData) => {
+                    const user = userData.user
+                    await setDoc(doc(firestore, 'users', user.uid), {
+                        username: username.value,
+                        email: email.value,
+                        userType: userType.value
+                    })
+                    alert('Signup successful! You can now log in.')
+                    // window.location.href = '/login'
+                    router.push('/firebase-login')
+                }).catch((error) => {
+                    console.log("Error occured: ", error);
+                    alert('Error signing up')
+                })
+        }
+    } catch (error) {
+        console.log("Error occured while signing up: ", error);
     }
 }
 </script>

@@ -3,7 +3,7 @@
         <header class="d-flex justify-content-center py-3">
             <ul class="nav nav-pills">
                 <li class="nav-item">
-                    <router-link to="/" class="nav-link me-3" active-class="active">Home</router-link>
+                    <router-link to="/" class="nav-link" active-class="active">Home</router-link>
                 </li>
 
                 <li class="nav-item">
@@ -33,9 +33,12 @@
 <script setup>
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const auth = getAuth()
 const isUserAuthenticated = ref(false)
+const router = useRouter()
+
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -46,6 +49,7 @@ onAuthStateChanged(auth, (user) => {
 function logout() {
     auth.signOut().then(() => {
         console.log("Logged out");
+        router.push('/')
         window.location.href = '/'
     }).catch((error) => {
         console.log("Error occured while logging out: ", error);
