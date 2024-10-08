@@ -20,6 +20,10 @@
                     <router-link to="/review" class="nav-link" active-class="active"
                         v-if="isUserAuthenticated && user?.userType === 'Patient'">Submit A Review</router-link>
                 </li>
+                <li class="nav-item">
+                    <router-link to="/send-email" class="nav-link" active-class="active"
+                        v-if="isUserAuthenticated && user?.userType === 'Staff'">Email</router-link>
+                </li>
                 <li class="nav-item ms-3">
                     <button class="btn btn-danger" v-if="isUserAuthenticated" @click="logout">Logout</button>
                     <router-link v-else to="/firebase-login" class="nav-link me" active-class="active">

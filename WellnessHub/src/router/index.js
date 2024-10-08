@@ -7,6 +7,7 @@ import FirebaseSignUpView from "@/views/FirebaseSignUpView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import FirebaseLoginView from "@/views/FirebaseLoginView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import EmailView from "@/views/EmailView.vue";
 const routes = [
   {
     path: "/",
@@ -34,6 +35,11 @@ const routes = [
     path: "/firebase-login",
     name: "FirebaseLogin",
     component: FirebaseLoginView,
+  },
+  {
+    path: "/send-email",
+    name: "SendEmail",
+    component: EmailView,
   },
 ];
 
