@@ -76,7 +76,8 @@ const submitForm = () => {
         signInWithEmailAndPassword(auth, email.value, password.value)
             .then(() => {
                 alert('Login successful!')
-                window.location.href = '/dashboard'
+                router.push('/dashboard')
+                // window.location.href = '/dashboard'
                 console.log("user is: " + auth.currentUser);
             })
             .catch((error) => {

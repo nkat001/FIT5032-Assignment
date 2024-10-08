@@ -7,7 +7,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <router-link to="/firebase-signup" class="nav-link" active-class="active">Firebase Sign
+                    <router-link to="/firebase-signup" v-if="!isUserAuthenticated" class="nav-link"
+                        active-class="active">Sign
                         Up</router-link>
                 </li>
 
@@ -17,42 +18,74 @@
                 </li>
                 <li class="nav-item">
                     <router-link to="/review" class="nav-link" active-class="active"
-                        v-if="isUserAuthenticated && userType === 'Patient'">Submit A Review</router-link>
+                        v-if="isUserAuthenticated && user?.userType === 'Patient'">Submit A Review</router-link>
                 </li>
                 <li class="nav-item ms-3">
                     <button class="btn btn-danger" v-if="isUserAuthenticated" @click="logout">Logout</button>
-                    <router-link v-else to="/firebase-login" class="nav-link me" active-class="active">Firebase
+                    <router-link v-else to="/firebase-login" class="nav-link me" active-class="active">
                         Login</router-link>
-
                 </li>
             </ul>
         </header>
     </div>
 </template>
-
-<script setup>
+<script>
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import db from '../../firebase/init';
+import { doc, getDoc } from 'firebase/firestore';
 
-const auth = getAuth()
-const isUserAuthenticated = ref(false)
-const router = useRouter()
+export default {
+    setup() {
+        const user = ref(null);
+        const isUserAuthenticated = ref(false);
+        const router = useRouter();
 
+        const logout = () => {
+            const auth = getAuth();
+            auth.signOut().then(() => {
+                console.log("Logged out");
+                router.push('/');
+                // window.location.href = '/';
+            }).catch((error) => {
+                console.log("Error occurred while logging out: ", error);
+            });
+        };
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        isUserAuthenticated.value = !!user;
+        const fetchUser = async (userId) => {
+            try {
+                const userRef = doc(db, 'users', userId);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    user.value = { id: userSnap.id, ...userSnap.data() };
+                } else {
+                    console.log('No such document!');
+                }
+            } catch (error) {
+                console.error("Error occurred while fetching user data:", error);
+            }
+        };
+
+        onMounted(() => {
+            const auth = getAuth();
+            onAuthStateChanged(auth, (firebaseUser) => {
+                if (firebaseUser) {
+                    isUserAuthenticated.value = true;
+                    fetchUser(firebaseUser.uid);
+                } else {
+                    isUserAuthenticated.value = false;
+                    console.log('No user logged in');
+                }
+            });
+        });
+
+        return {
+            user,
+            isUserAuthenticated,
+            logout
+        };
     }
-})
-
-function logout() {
-    auth.signOut().then(() => {
-        console.log("Logged out");
-        router.push('/')
-        window.location.href = '/'
-    }).catch((error) => {
-        console.log("Error occured while logging out: ", error);
-    })
-}
+};
 </script>

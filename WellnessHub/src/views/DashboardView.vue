@@ -1,9 +1,9 @@
 <template>
   <div class="container d-flex justify-content-center">
-    <div>
-      <h6 class="mt-5 text-primary text-bold">Logged in as {{ userEmail }} (put user type here)</h6>
+    <div v-if="user">
+      <h6 class="mt-5 text-primary text-bold">Logged in as {{ user.email }} ({{ user.userType }})</h6>
       <h1 class="text-center border border-dark rounded p-3">
-        Welcome Back, (put name here)!
+        Welcome Back, {{ user.username }}!
       </h1>
       <div class="text-center">
         <h2 class="font-weight-bold font-italic mt-5">Dashboard</h2>
@@ -13,11 +13,46 @@
   </div>
 </template>
 
-<script setup>
+<script>
+import { doc, getDoc } from 'firebase/firestore';
+import { onMounted, ref } from 'vue';
+import db from '../../firebase/init';
 import { getAuth } from 'firebase/auth';
 
-const auth = getAuth();
-const userEmail = auth.currentUser.email;
+export default {
+  setup() {
+    const user = ref(null)
+    const fetchUser = async (userId) => {
+      try {
+        const userRef = doc(db, 'users', userId)
+        const userSnap = await getDoc(userRef)
+
+        if (userSnap.exists()) {
+          user.value = { id: userSnap.id, ...userSnap.data() };
+        } else {
+          console.log('No such document!')
+        }
+      } catch (error) {
+        console.error("Error occured while fetching: ", error)
+      }
+    }
+
+    const auth = getAuth()
+    onMounted(() => {
+      const currentUser = auth.currentUser
+      if (currentUser) {
+        fetchUser(currentUser.uid)
+      } else {
+        console.log('No user logged in dashboard')
+      }
+    })
+
+    return {
+      user
+    }
+  }
+}
+
 </script>
 
 <style scoped>
