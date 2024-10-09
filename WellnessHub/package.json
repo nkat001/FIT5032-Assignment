@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@primevue/themes": "^4.1.0",
     "@syncfusion/ej2-vue-inputs": "^26.2.11",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
@@ -18,10 +19,12 @@
     "firebase": "^10.14.0",
     "multer": "^1.4.5-lts.1",
     "node-mailjet": "^6.0.6",
+    "primevue": "^4.1.0",
     "vue": "^3.4.29",
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
     "@vitejs/plugin-vue": "^5.0.5",
     "vite": "^5.3.1",
     "vite-plugin-vue-devtools": "^7.3.1"

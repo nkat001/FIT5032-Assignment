@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 import router from "./router";
+import PrimeVue from "primevue/config";
+import Aura from "@primevue/themes/aura";
 
 const app = createApp(App);
 
@@ -23,5 +25,16 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 
+// PrimeVue config
+app.use(PrimeVue, {
+  theme: {
+      preset: Aura,
+      options: {
+          prefix: 'p',
+          darkModeSelector: 'light',
+          cssLayer: false
+      }
+  }
+});
 app.use(router);
 app.mount("#app");

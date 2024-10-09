@@ -35,7 +35,20 @@
             </div>
         </div>
     </div>
-    <!-- for the cards -->
+
+    <!-- for the data table -->
+    <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3 mt-5 text-center mb-5">
+        <div class="flex justify-center text-center mb-3">
+            <SelectButton v-model="size" :options="sizeOptions" optionLabel="label" dataKey="label" />
+        </div>
+        <DataTable :value="submittedCards" :size="size.value" showGridlines stripedRows removableSort paginator
+            :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" table-style="min-width:50rem max-width:100rem">
+            <Column field="rating" header="Rating" sortable style="width: 20%"></Column>
+            <Column field="review" header="Review" sortable style="width: 40%"></Column>
+        </DataTable>
+    </div>
+
+    <!-- for the cards
     <div class="row mt-5" v-if="submittedCards.length">
         <div class="d-flex flex-wrap justify-content-center">
             <div v-for="(card, index) in submittedCards" :key="index" class="card m-2" style="width: 18rem">
@@ -46,12 +59,24 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import DOMPurify from 'dompurify';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import SelectButton from 'primevue/selectbutton';
+import ColumnGroup from 'primevue/columngroup';
+import Row from 'primevue/row';
+
+const size = ref({ label: 'Normal', value: 'null' });
+const sizeOptions = ref([
+    { label: 'Small', value: 'small' },
+    { label: 'Normal', value: 'null' },
+    { label: 'Large', value: 'large' }
+]);
 
 const ratings = ref(JSON.parse(localStorage.getItem('ratings')) || []) // JSON to JS
 const submittedCards = ref(JSON.parse(localStorage.getItem('submittedCards')) || [])
