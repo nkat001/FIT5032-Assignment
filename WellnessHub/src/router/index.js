@@ -9,6 +9,8 @@ import FirebaseLoginView from "@/views/FirebaseLoginView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import EmailView from "@/views/EmailView.vue";
 import ClinicsView from "@/views/ClinicsView.vue";
+import AdminDashboardView from "@/views/AdminDashboardView.vue";
+
 const routes = [
   {
     path: "/",
@@ -47,6 +49,7 @@ const routes = [
     name: "Clinics",
     component: ClinicsView,
   },
+  { path: "/users", name: "Users", component: AdminDashboardView },
 ];
 
 const router = createRouter({

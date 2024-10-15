@@ -28,6 +28,10 @@
                     <router-link to="/clinics" class="nav-link" active-class="active"
                         v-if="isUserAuthenticated && user?.userType === 'Patient'">Clinics</router-link>
                 </li>
+                <li class="nav-item">
+                    <router-link to="/users" class="nav-link" active-class="active"
+                        v-if="isUserAuthenticated && user?.userType === 'Admin'">User Information</router-link>
+                </li>
                 <li class="nav-item ms-3">
                     <button class="btn btn-danger" v-if="isUserAuthenticated" @click="logout">Logout</button>
                     <router-link v-else to="/firebase-login" class="nav-link me" active-class="active">

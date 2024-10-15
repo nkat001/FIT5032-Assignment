@@ -24,6 +24,7 @@
                             <select id="userType" class="form-select" v-model="formData.userType"
                                 @blur="() => validateUserType(true)" @input="() => validateUserType(false)">
                                 <option value="" disabled>Select User Type</option>
+                                <option value="Admin">Admin</option>
                                 <option value="Patient">Patient</option>
                                 <option value="Staff">Staff</option>
                             </select>
