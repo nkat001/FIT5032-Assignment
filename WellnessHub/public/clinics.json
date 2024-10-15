@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Mount Waverley Clinic",
+    "address": "16 Alexander St, Mount Waverley VIC 3149",
+    "location": "16 Alexander St, Mount Waverley VIC 3149",
+    "image": "/images/mount-waverly.png"
+  },
+  {
+    "name": "Valewood Clinic",
+    "address": "1 Wanda St, Mulgrave VIC 3170",
+    "location": "1 Wanda St, Mulgrave VIC 3170",
+    "image": "/images/valewood.png"
+  },
+  {
+    "name": "Mediclinic Clayton",
+    "address": "Audsley St, Clayton South VIC 3169",
+    "location": "Audsley St, Clayton South VIC 3169",
+    "image": "/images/mediclinic.png"
+  }
+]

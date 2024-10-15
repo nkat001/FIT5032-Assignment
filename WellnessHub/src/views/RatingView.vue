@@ -41,35 +41,26 @@
         <div class="flex justify-center text-center mb-3">
             <SelectButton v-model="size" :options="sizeOptions" optionLabel="label" dataKey="label" />
         </div>
-        <DataTable :value="submittedCards" :size="size.value" showGridlines stripedRows removableSort paginator
+        <DataTable :value="reviewsAndRatings" :size="size.value" showGridlines stripedRows removableSort paginator :tableStyle="tableStyle"
             :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" table-style="min-width:50rem max-width:100rem">
             <Column field="rating" header="Rating" sortable style="width: 20%"></Column>
-            <Column field="review" header="Review" sortable style="width: 40%"></Column>
+            <Column field="review" header="Review" style="width: 40%"></Column>
         </DataTable>
     </div>
-
-    <!-- for the cards
-    <div class="row mt-5" v-if="submittedCards.length">
-        <div class="d-flex flex-wrap justify-content-center">
-            <div v-for="(card, index) in submittedCards" :key="index" class="card m-2" style="width: 18rem">
-                <div class="card-header">Rating</div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Rating: {{ card.rating }}</li>
-                    <li class="list-group-item">Review: {{ card.review }}</li>
-                </ul>
-            </div>
-        </div>
-    </div> -->
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import DOMPurify from 'dompurify';
+import { computed, onMounted, ref } from 'vue'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import SelectButton from 'primevue/selectbutton';
-import ColumnGroup from 'primevue/columngroup';
-import Row from 'primevue/row';
+import { FilterMatchMode } from '@primevue/core/api';
+import InputText from 'primevue/inputtext';
+import { getAuth } from 'firebase/auth';
+import { doc, getFirestore, setDoc, getDocs, collection } from 'firebase/firestore';
+
+const auth = getAuth();
+const firestore = getFirestore();
 
 const size = ref({ label: 'Normal', value: 'null' });
 const sizeOptions = ref([
@@ -78,8 +69,23 @@ const sizeOptions = ref([
     { label: 'Large', value: 'large' }
 ]);
 
-const ratings = ref(JSON.parse(localStorage.getItem('ratings')) || []) // JSON to JS
-const submittedCards = ref(JSON.parse(localStorage.getItem('submittedCards')) || [])
+// Computed property to handle dynamic table size
+const tableStyle = computed(() => {
+    switch (size.value.value) {
+        case 'small':
+            return { 'font-size': '12px' };
+        case 'large':
+            return { 'font-size': '18px' };
+        default:
+            return { 'font-size': '14px' };
+    }
+});
+
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    rating: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    review: { value: null, matchMode: FilterMatchMode.CONTAINS },
+});
 
 const formData = ref({
     rating: '',
@@ -90,6 +96,10 @@ const errors = ref({
     rating: null,
     review: null
 })
+
+const ratings = ref([])
+const reviews = ref([])
+const reviewsAndRatings = ref([])
 
 const validateRating = (blur) => {
     if (formData.value.rating === '') {
@@ -107,24 +117,62 @@ const validateReview = (blur) => {
     }
 }
 
-const submitForm = () => {
+const submitForm = async () => {
     validateRating(true)
     validateReview(true)
-    if (!errors.value.rating && !errors.value.review) {
-        const sanitizedReview = DOMPurify.sanitize(formData.value.review)
-        console.log("Unsanitized review: " + formData.value.review);
-        console.log("Sanitized review: " + sanitizedReview);
 
-        const newCard = { rating: formData.value.rating, review: sanitizedReview }
-        submittedCards.value.push(newCard)
-        ratings.value.push(formData.value.rating)
-
-        localStorage.setItem('submittedCards', JSON.stringify(submittedCards.value))
-        localStorage.setItem('ratings', JSON.stringify(ratings.value))
-
+    try {
+        if (!errors.value.rating && !errors.value.review) {
+            const currentUser = auth.currentUser.uid
+            await setDoc(doc(firestore, 'ratings', currentUser), {
+                rating: formData.value.rating
+            })
+            await setDoc(doc(firestore, 'reviews', currentUser), {
+                review: formData.value.review
+            })
+            await setDoc(doc(firestore, 'reviewsAndRatings', currentUser), {
+                rating: formData.value.rating,
+                review: formData.value.review
+            })
+        }
+        console.log('Review submitted');
+        alert('Thank you for your review')
         formData.value = { rating: '', review: '' }
+        window.location.href = '/review'
+    } catch (error) {
+        console.error('Error occured when adding reviews: ', error)
     }
 }
+
+// Fetch ratings from Firestore on component mount
+const fetchRatings = async () => {
+    const querySnapshot = await getDocs(collection(firestore, 'ratings'));
+    querySnapshot.forEach((doc) => {
+        ratings.value.push(parseFloat(doc.data().rating));
+    });
+};
+
+// Fetch reviews from Firestore on component mount
+const fetchReviews = async () => {
+    const querySnapshot = await getDocs(collection(firestore, 'reviews'));
+    querySnapshot.forEach((doc) => {
+        reviews.value.push(parseFloat(doc.data().review));
+    });
+};
+
+// Fetch ratings from Firestore on component mount
+const fetchRatingsAndReviews = async () => {
+    const querySnapshot = await getDocs(collection(firestore, 'reviewsAndRatings'));
+    querySnapshot.forEach((doc) => {
+        reviewsAndRatings.value.push((doc.data()));
+    });
+};
+
+onMounted(async () => {
+    await fetchRatings();
+    await fetchReviews();
+    await fetchRatingsAndReviews();
+})
 
 const averageRating = computed(() => {
     if (ratings.value.length === 0) return 0
