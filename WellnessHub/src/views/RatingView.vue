@@ -41,8 +41,18 @@
         <div class="flex justify-center text-center mb-3">
             <SelectButton v-model="size" :options="sizeOptions" optionLabel="label" dataKey="label" />
         </div>
-        <DataTable :value="reviewsAndRatings" :size="size.value" showGridlines stripedRows removableSort paginator :tableStyle="tableStyle"
-            :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" table-style="min-width:50rem max-width:100rem">
+        <div class="text-end mb-3">
+            <select class="form-select form-select-md" style="width: 160px; background-color: #e0e0e0; color: #333;"
+                @change="handleExport">
+                <option value="" disabled selected hidden>Export Reviews</option>
+                <option value="csv">Export as CSV</option>
+                <option value="pdf">Export as PDF</option>
+                <option value="xlsx">Export as Excel</option>
+            </select>
+        </div>
+        <DataTable :value="reviewsAndRatings" ref="dt" :size="size.value" showGridlines stripedRows removableSort
+            paginator :tableStyle="tableStyle" :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]"
+            table-style="min-width:50rem max-width:100rem">
             <Column field="rating" header="Rating" sortable style="width: 20%"></Column>
             <Column field="review" header="Review" style="width: 40%"></Column>
         </DataTable>
@@ -58,7 +68,10 @@ import { FilterMatchMode } from '@primevue/core/api';
 import InputText from 'primevue/inputtext';
 import { getAuth } from 'firebase/auth';
 import { doc, getFirestore, setDoc, getDocs, collection } from 'firebase/firestore';
+import { jsPDF } from 'jspdf';
+import * as XLSX from 'xlsx';
 
+let dt = ref();
 const auth = getAuth();
 const firestore = getFirestore();
 
@@ -116,6 +129,47 @@ const validateReview = (blur) => {
         errors.value.review = null
     }
 }
+
+// Export to CSV
+const exportCSV = () => {
+    dt.value.exportCSV();
+};
+
+// Export to PDF
+const exportPDF = () => {
+    const doc = new jsPDF;
+    doc.text('Ratings and Reviews', 10, 10);
+    reviewsAndRatings.value.forEach((item, index) => {
+        doc.text(`${index + 1}. Rating: ${item.rating}, Review: ${item.review}`, 10, 20 + index * 10);
+    });
+    doc.save('reviews.pdf');
+};
+
+// Export to XLSX
+const exportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(reviews.value);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Reviews");
+    XLSX.writeFile(workbook, 'reviews.xlsx');
+}
+
+const handleExport = (event) => {
+    const selectedOption = event.target.value;
+
+    switch (selectedOption) {
+        case 'csv':
+            exportCSV();
+            break;
+        case 'pdf':
+            exportPDF();
+            break;
+        case 'xlsx':
+            exportExcel();
+            break;
+        default:
+            console.log("No export option selected");
+    }
+};
 
 const submitForm = async () => {
     validateRating(true)
