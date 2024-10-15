@@ -39,8 +39,10 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 const clinics = ref([]);
 const size = ref({ label: 'Normal', value: 'null' });
-let map; 
-let directions; 
+let directions;
+let currentLatitude;
+let currentLongitude;
+let map;
 
 const tableStyle = computed(() => {
     switch (size.value.value) {
@@ -58,36 +60,46 @@ onMounted(async () => {
         const response = await fetch('/clinics.json');
         clinics.value = await response.json();
 
-        // Initialize Mapbox map
-        mapboxgl.accessToken = 'pk.eyJ1IjoibmV0aGFyYTEwIiwiYSI6ImNtMjlvNTJqYTA3ZW4yb3ByNDE5aDRremQifQ.VmoerTNcvQS_DxuQ-GnhpA';
-        map = new mapboxgl.Map({
-            container: 'map',
-            center: [-74.5, 40],
-            zoom: 9
-        });
+        navigator.geolocation.getCurrentPosition((position) => {
+            currentLongitude = position.coords.longitude
+            currentLatitude = position.coords.latitude
 
-        // Add the Geocoder control 
-        map.addControl(
-            new MapboxGeocoder({
+            // Initialize Mapbox map
+            mapboxgl.accessToken = 'pk.eyJ1IjoibmV0aGFyYTEwIiwiYSI6ImNtMjlvNTJqYTA3ZW4yb3ByNDE5aDRremQifQ.VmoerTNcvQS_DxuQ-GnhpA';
+            map = new mapboxgl.Map({
+                container: 'map',
+                center: [currentLongitude, currentLatitude],
+                zoom: 12
+            });
+
+            // Add marker to current location
+            new mapboxgl.Marker()
+                .setLngLat([currentLongitude, currentLatitude])
+                .setPopup(new mapboxgl.Popup().setText('You are here'))
+                .addTo(map);
+
+            // Add the Geocoder control 
+            map.addControl(
+                new MapboxGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    mapboxgl: mapboxgl
+                }),
+                'top-right'
+            );
+
+            // Initialize Directions
+            directions = new MapboxDirections({
                 accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
-            }),
-            'top-right'
-        );
-
-        // Initialize Directions
-        directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            unit: 'metric',
-            profile: 'mapbox/driving',
-            interactive: false,
-            controls: {
-                inputs: false,
-                instructions: true
-            }
-        });
-
-        map.addControl(directions, 'top-left'); // Add directions control to the map
+                unit: 'metric',
+                profile: 'mapbox/driving',
+                interactive: false,
+                controls: {
+                    inputs: false,
+                    instructions: true
+                }
+            });
+            map.addControl(directions, 'top-left');
+        })
     } catch (error) {
         console.error('Error fetching clinics:', error);
     }
