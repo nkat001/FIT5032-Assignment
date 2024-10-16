@@ -27,40 +27,39 @@ app.post("/send-email", upload.single("attachment"), async (req, res) => {
     const recipientEmail = req.body.recipientEmail;
     const subject = req.body.subject;
     const message = req.body.message;
-    const attachment = req.file;
-    console.log("test1");
-    console.log("em: " + recipientEmail);
-    console.log("sub: " + subject);
-    console.log("msg: " + message);
-    console.log("att: " + attachment.originalname);
 
-    const fileContent = fs.readFileSync(attachment.path);
-    console.log("test2");
-
-    const request = mailjetClient.post("send", { version: "v3.1" }).request({
-      Messages: [
+    const messages = {
+      From: {
+        Email: process.env.SENDER_EMAIL,
+        Name: process.env.SENDER_NAME,
+      },
+      To: [
         {
-          From: {
-            Email: process.env.SENDER_EMAIL,
-            Name: process.env.SENDER_NAME,
-          },
-          To: [
-            {
-              Email: recipientEmail,
-              Name: "User",
-            },
-          ],
-          Subject: subject,
-          TextPart: message,
-          Attachments: [
-            {
-              ContentType: "text/plain",
-              Filename: "test.txt",
-              Base64Content: fileContent.toString("base64"),
-            },
-          ],
+          Email: recipientEmail,
+          Name: "User",
         },
       ],
+      Subject: subject,
+      TextPart: message,
+    };
+
+    // Check if the file exists
+    if (req.file) {
+      const attachment = req.file;
+      const fileContent = fs.readFileSync(attachment.path);
+
+      // Add attachment to the message if provided
+      messages.Attachments = [
+        {
+          ContentType: "application/pdf",
+          Filename: "report.pdf",
+          Base64Content: fileContent.toString("base64"),
+        },
+      ];
+    }
+
+    const request = mailjetClient.post("send", { version: "v3.1" }).request({
+      Messages: [messages],
     });
 
     const response = await request;

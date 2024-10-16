@@ -54,7 +54,10 @@ export default {
             formData.append("recipientEmail", this.recipientEmail);
             formData.append("subject", this.subject);
             formData.append("message", this.message);
-            formData.append("attachment", this.file);
+
+            if(this.file) {
+                formData.append("attachment", this.file);
+            }
 
             try {
                 await fetch("http://localhost:3000/send-email", {
@@ -63,7 +66,6 @@ export default {
                 });
                 alert("Email sent successfully!");
                 this.$router.push('/')
-                window.location.href = '/'
                 this.resetFields()
             } catch (error) {
                 console.error("Error sending email:", error);

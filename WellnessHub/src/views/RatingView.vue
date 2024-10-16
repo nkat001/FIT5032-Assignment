@@ -51,7 +51,7 @@
             </select>
         </div>
         <DataTable :value="reviewsAndRatings" ref="dt" :size="size.value" showGridlines stripedRows removableSort
-            paginator :tableStyle="tableStyle" :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]"
+            paginator :tableStyle="tableStyle" :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" :rowClass="getRowClass"
             table-style="min-width:50rem max-width:100rem">
             <Column field="rating" header="Rating" sortable style="width: 20%"></Column>
             <Column field="review" header="Review" style="width: 40%"></Column>
@@ -93,6 +93,10 @@ const tableStyle = computed(() => {
             return { 'font-size': '14px' };
     }
 });
+
+const getRowClass = () => {
+    return 'table-row-hover';
+}
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -226,6 +230,7 @@ onMounted(async () => {
     await fetchRatings();
     await fetchReviews();
     await fetchRatingsAndReviews();
+    await getRowClass()
 })
 
 const averageRating = computed(() => {
@@ -251,5 +256,10 @@ const averageRating = computed(() => {
 
 .list-group-item {
     padding: 10px;
+}
+
+:deep(.table-row-hover) tbody tr:hover {
+    background-color: blue;
+    cursor: pointer;
 }
 </style>

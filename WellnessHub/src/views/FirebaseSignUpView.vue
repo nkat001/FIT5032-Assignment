@@ -155,6 +155,7 @@ const signUp = () => {
                         userType: userType.value
                     })
                     alert('Signup successful! You can now log in.')
+                    await auth.signOut()
                     // window.location.href = '/login'
                     router.push('/firebase-login')
                 }).catch((error) => {
