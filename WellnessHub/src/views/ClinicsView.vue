@@ -3,12 +3,13 @@
         <h1 class="mt-5 text-center">Clinics</h1>
         <div class="m-5">
             <DataTable :value="clinics" tableStyle="min-width: 50rem" :tableStyle="tableStyle" paginator stripedRows
-                removableSort :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]">
+                removableSort :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
                 <Column field="name" header="Clinic Name" sortable />
                 <Column field="address" header="Address" />
                 <Column header="Image">
                     <template #body="slotProps">
                         <img :src="slotProps.data.image" :alt="slotProps.data.name" class="clinic-image" />
+                        <p class="image-description">{{ slotProps.data.imageDesc }}</p>
                     </template>
                 </Column>
                 <Column header="Location">
@@ -135,6 +136,10 @@ const getDirections = async (clinic) => {
     width: 130px;
     height: 100px;
     border-radius: 5px;
+}
+
+.image-description {
+    font-style: italic;
 }
 
 #map {

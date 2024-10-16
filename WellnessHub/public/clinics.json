@@ -3,18 +3,49 @@
     "name": "Mount Waverley Clinic",
     "address": "16 Alexander St, Mount Waverley VIC 3149",
     "location": "16 Alexander St, Mount Waverley VIC 3149",
-    "image": "/images/mount-waverly.png"
+    "image": "/images/mount-waverly.png",
+    "imageDesc": "Image of Mount Waverley clinic"
   },
   {
     "name": "Valewood Clinic",
     "address": "1 Wanda St, Mulgrave VIC 3170",
     "location": "1 Wanda St, Mulgrave VIC 3170",
-    "image": "/images/valewood.png"
+    "image": "/images/valewood.png",
+    "imageDesc": "Image of Valewood clinic"
   },
   {
-    "name": "Mediclinic Clayton",
-    "address": "Audsley St, Clayton South VIC 3169",
-    "location": "Audsley St, Clayton South VIC 3169",
-    "image": "/images/mediclinic.png"
+    "name": "The Melbourne Clinic",
+    "address": "130 Church St, Richmond VIC 3121",
+    "location": "130 Church St, Richmond VIC 3121",
+    "image": "/images/melbourne-clinic.jpg",
+    "imageDesc": "Image of Melbourne clinic"
+  },
+  {
+    "name": "The Mind Room",
+    "address": "28 Wellington St, Collingwood VIC 3066",
+    "location": "28 Wellington St, Collingwood VIC 3066",
+    "image": "/images/mind-room.jpeg",
+    "imageDesc": "Image of Mind Room clinic"
+  },
+  {
+    "name": "Monarch Health",
+    "address": "Suite 1, Level 4/20 Collins St, Melbourne VIC 3000",
+    "location": "Suite 1, Level 4/20 Collins St, Melbourne VIC 3000",
+    "image": "/images/monarch-health.jpg",
+    "imageDesc": "Image of Monarch Health clinic"
+  },
+  {
+    "name": "Cova Psychology",
+    "address": "19/12 Collins St, Melbourne VIC 3000",
+    "location": "19/12 Collins St, Melbourne VIC 3000",
+    "image": "/images/cova-psycology.jpg",
+    "imageDesc": "Image of Cova Psychology clinic"
+  },
+  {
+    "name": "Clarity Psychology",
+    "address": "28b/255 Drummond St, Carlton VIC 3053",
+    "location": "28b/255 Drummond St, Carlton VIC 3053",
+    "image": "/images/clarity-psycology.jpg",
+    "imageDesc": "Image of Clarity Psychology clinic"
   }
 ]
