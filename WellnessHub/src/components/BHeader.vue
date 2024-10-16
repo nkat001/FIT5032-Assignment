@@ -29,6 +29,10 @@
                         v-if="isUserAuthenticated && (user?.userType === 'Staff' || user?.userType === 'Admin')">Email</router-link>
                 </li>
                 <li class="nav-item">
+                    <router-link to="/send-bulk-emails" class="nav-link" active-class="active"
+                        v-if="isUserAuthenticated && user?.userType === 'Admin'">Bulk Emails</router-link>
+                </li>
+                <li class="nav-item">
                     <router-link to="/clinics" class="nav-link" active-class="active"
                         v-if="isUserAuthenticated && user?.userType === 'Patient'">Clinics</router-link>
                 </li>

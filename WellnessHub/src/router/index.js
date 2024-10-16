@@ -10,6 +10,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import EmailView from "@/views/EmailView.vue";
 import ClinicsView from "@/views/ClinicsView.vue";
 import AdminDashboardView from "@/views/AdminDashboardView.vue";
+import BulkEmailsView from "@/views/BulkEmailsView.vue";
 
 const routes = [
   {
@@ -43,6 +44,11 @@ const routes = [
     path: "/send-email",
     name: "SendEmail",
     component: EmailView,
+  },
+  {
+    path: "/send-bulk-emails",
+    name: "SendBulkEmails",
+    component: BulkEmailsView,
   },
   {
     path: "/clinics",

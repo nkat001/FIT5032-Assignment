@@ -69,6 +69,37 @@ app.post("/send-email", upload.single("attachment"), async (req, res) => {
   }
 });
 
+app.post("/send-bulk-email", async (req, res) => {
+  try {
+    const { recipients, subject, message } = req.body;
+
+    // Create an array to hold the messages for each recipient
+    const messages = recipients.map(email => ({
+      From: {
+        Email: process.env.SENDER_EMAIL,
+        Name: process.env.SENDER_NAME,
+      },
+      To: [
+        {
+          Email: email,
+          Name: "User",
+        },
+      ],
+      Subject: subject,
+      TextPart: message,
+    }));
+
+    const request = mailjetClient.post("send", { version: "v3.1" }).request({
+      Messages: messages,
+    });
+
+    const response = await request;
+    res.status(200).json({ status: "success", data: response.body });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+});
+
 // Start the server
 app.listen(3000, () => {
   console.log("Server running on port 3000");
