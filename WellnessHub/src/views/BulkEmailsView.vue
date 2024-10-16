@@ -34,7 +34,7 @@
         <form @submit.prevent="sendBulkEmail">
             <div class="mb-3">
                 <label for="subject" class="form-label">Subject:</label>
-                <input v-model="subject" class="form-control" type="text" id="subject" required />
+                <input v-model="subject" class="form-control" type="text" id="subject" autocomplete="off" required />
             </div>
             <div class="mb-3">
                 <label for="message" class="form-label">Message:</label>

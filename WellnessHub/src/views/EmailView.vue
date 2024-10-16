@@ -7,15 +7,18 @@
                     <div class="row mb-3">
                         <div class="col-12 mb-3">
                             <label for="recipient" class="form-label">Recipient Email:</label>
-                            <input v-model="recipientEmail" class="form-control" type="email" id="recipient" required />
+                            <input v-model="recipientEmail" class="form-control" type="email" id="recipient"
+                                autocomplete="off" required />
                         </div>
                         <div class="col-12 mb-3">
                             <label for="subject" class="form-label">Subject:</label>
-                            <input v-model="subject" class="form-control" type="text" id="subject" required />
+                            <input v-model="subject" class="form-control" type="text" id="subject" autocomplete="off"
+                                required />
                         </div>
                         <div class="col-12 mb-3">
                             <label for="message" class="form-label">Message:</label>
-                            <textarea v-model="message" class="form-control" id="message" required></textarea>
+                            <textarea v-model="message" class="form-control" id="message" autocomplete="off"
+                                required></textarea>
                         </div>
                         <div class="col-12 mb-3">
                             <label for="attachment" class="form-label">Select File:</label>
@@ -55,7 +58,7 @@ export default {
             formData.append("subject", this.subject);
             formData.append("message", this.message);
 
-            if(this.file) {
+            if (this.file) {
                 formData.append("attachment", this.file);
             }
 
