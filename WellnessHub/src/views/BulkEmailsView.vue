@@ -16,7 +16,7 @@
             <!-- Name, Email, and Type Columns -->
             <Column field="username" header="Name" sortable style="width: 20%"></Column>
             <Column field="email" header="Email" style="width: 30%"></Column>
-            <Column field="userType" header="Type" style="width: 20%"></Column>
+            <Column field="userType" header="Type" sortable style="width: 20%"></Column>
 
             <!-- Checkbox for selecting users -->
             <Column selectionMode="multiple" headerStyle="width: 5%" />

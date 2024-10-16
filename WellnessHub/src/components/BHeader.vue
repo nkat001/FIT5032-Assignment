@@ -1,52 +1,51 @@
 <template>
-    <div class="container">
-        <header class="d-flex justify-content-center py-3">
-            <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <router-link to="/" class="nav-link" active-class="active">Home</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link to="/firebase-signup" v-if="!isUserAuthenticated" class="nav-link"
-                        active-class="active">Sign
-                        Up</router-link>
-                </li>
-                <li>
-                    <router-link v-if="!isUserAuthenticated" to="/firebase-login" class="nav-link me"
-                        active-class="active">
-                        Login</router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/dashboard" class="nav-link" active-class="active"
-                        v-if="isUserAuthenticated">Dashboard</router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/review" class="nav-link" active-class="active"
-                        v-if="isUserAuthenticated && user?.userType === 'Patient'">Submit A Review</router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/send-email" class="nav-link" active-class="active"
-                        v-if="isUserAuthenticated && (user?.userType === 'Staff' || user?.userType === 'Admin')">Email</router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/send-bulk-emails" class="nav-link" active-class="active"
-                        v-if="isUserAuthenticated && user?.userType === 'Admin'">Bulk Emails</router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/clinics" class="nav-link" active-class="active"
-                        v-if="isUserAuthenticated && user?.userType === 'Patient'">Clinics</router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/users" class="nav-link" active-class="active"
-                        v-if="isUserAuthenticated && user?.userType === 'Admin'">User Information</router-link>
-                </li>
-                <li class="nav-item ms-3">
-                    <button class="btn btn-danger" v-if="isUserAuthenticated" @click="logout">Logout</button>
-                </li>
-            </ul>
-        </header>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm nav-styles">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav nav-ul">
+                    <li class="nav-item" style="color: white;">
+                        <router-link to="/" class="nav-link" active-class="active">Home</router-link>
+                    </li>
+                    <li class="nav-item" v-if="!isUserAuthenticated">
+                        <router-link to="/firebase-signup" class="nav-link" active-class="active">Sign Up</router-link>
+                    </li>
+                    <li class="nav-item" v-if="!isUserAuthenticated">
+                        <router-link to="/firebase-login" class="nav-link" active-class="active">Login</router-link>
+                    </li>
+                    <li class="nav-item" v-if="isUserAuthenticated">
+                        <router-link to="/dashboard" class="nav-link" active-class="active">Dashboard</router-link>
+                    </li>
+                    <li class="nav-item" v-if="isUserAuthenticated && user?.userType === 'Patient'">
+                        <router-link to="/review" class="nav-link" active-class="active">Submit A Review</router-link>
+                    </li>
+                    <li class="nav-item"
+                        v-if="isUserAuthenticated && (user?.userType === 'Staff' || user?.userType === 'Admin')">
+                        <router-link to="/send-email" class="nav-link" active-class="active">Email</router-link>
+                    </li>
+                    <li class="nav-item" v-if="isUserAuthenticated && user?.userType === 'Admin'">
+                        <router-link to="/send-bulk-emails" class="nav-link" active-class="active">Bulk
+                            Emails</router-link>
+                    </li>
+                    <li class="nav-item" v-if="isUserAuthenticated && user?.userType === 'Patient'">
+                        <router-link to="/clinics" class="nav-link" active-class="active">Clinics</router-link>
+                    </li>
+                    <li class="nav-item" v-if="isUserAuthenticated && user?.userType === 'Admin'">
+                        <router-link to="/users" class="nav-link" active-class="active">User Information</router-link>
+                    </li>
+                    <li class="nav-item ms-3" v-if="isUserAuthenticated">
+                        <button class="btn btn-outline-light" @click="logout">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </template>
+
+
 <script>
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { onMounted, ref } from 'vue';
@@ -107,3 +106,18 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.nav-styles {
+    background-color: #577399 !important;
+}
+
+.nav-ul li a {
+    color: black;
+    text-decoration: none;
+}
+
+.nav-ul li a.active {
+    color: white;
+}
+</style>
