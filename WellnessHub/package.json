@@ -14,6 +14,7 @@
     "@nodeart/productservice": "^2.1.56",
     "@primevue/themes": "^4.1.0",
     "@syncfusion/ej2-vue-inputs": "^26.2.11",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.4",
     "cors": "^2.8.5",
