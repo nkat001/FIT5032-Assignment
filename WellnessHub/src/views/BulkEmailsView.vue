@@ -38,9 +38,10 @@
             </div>
             <div class="mb-3">
                 <label for="message" class="form-label">Message:</label>
-                <textarea v-model="message" class="form-control" id="message" required></textarea>
+                <textarea v-model="message" class="form-control" id="message" required rows="5"></textarea>
             </div>
             <div class="text-center mt-3 mb-5">
+                <button type="button" @click="generateContent" class="btn btn-secondary me-3">Generate Content</button>
                 <button type="submit" class="btn btn-success me-3">Send Emails</button>
                 <button type="button" @click="showEmailForm = false" class="btn btn-secondary ml-2">Cancel</button>
             </div>
@@ -53,6 +54,7 @@ import { ref, onMounted, computed } from 'vue';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Firestore instance
 const db = getFirestore();
@@ -63,8 +65,9 @@ const selectedUsers = ref([]);
 const subject = ref('');
 const message = ref('');
 const showEmailForm = ref(false);
-const emailFormRef = ref(null); // Correctly initialized ref
-const searchQuery = ref(''); // Search input reactive variable
+const emailFormRef = ref(null);
+const searchQuery = ref('');
+const GEMINI_API_KEY = 'AIzaSyBws0FAlpWcwrrT1E7Lyq8rk6J-yl41CJI'
 
 // Fetch users from Firestore
 const fetchUsers = async () => {
@@ -77,9 +80,8 @@ const fetchUsers = async () => {
 
 // Computed property for filtered users based on search query
 const filteredUsers = computed(() => {
-    if (!searchQuery.value) return users.value; // Return all users if search query is empty
+    if (!searchQuery.value) return users.value;
     return users.value.filter(user => {
-        // Check if username or email includes the search query (case-insensitive)
         return user.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
             user.email.toLowerCase().includes(searchQuery.value.toLowerCase());
     });
@@ -87,8 +89,7 @@ const filteredUsers = computed(() => {
 
 // Scroll to email form
 const scrollToEmailForm = () => {
-    showEmailForm.value = true; // Show the email form
-    // Check if the ref is not null before calling scrollIntoView
+    showEmailForm.value = true;
     if (emailFormRef.value) {
         emailFormRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -101,11 +102,9 @@ const sendBulkEmail = async () => {
         return;
     }
 
-    // Format the selected user emails
     const emailList = selectedUsers.value.map(user => user.email);
 
     try {
-        // Call the backend to send emails
         await fetch('http://localhost:3000/send-bulk-email', {
             method: 'POST',
             headers: {
@@ -118,11 +117,25 @@ const sendBulkEmail = async () => {
             }),
         });
         alert('Emails sent successfully!');
-        showEmailForm.value = false; // Hide the email form after sending
-        resetFields(); // Reset the fields
+        showEmailForm.value = false;
+        resetFields();
     } catch (error) {
         console.error('Error sending emails:', error);
         alert('Failed to send emails');
+    }
+};
+
+// Generate content using Gemini
+const generateContent = async () => {
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = `Create an email about our new services. Subject: ${subject.value}`;
+    try {
+        const result = await model.generateContent(prompt);
+        message.value = result.response.text(); // Update message with generated content
+    } catch (error) {
+        console.error("Error generating content:", error);
+        alert("Failed to generate email content.");
     }
 };
 

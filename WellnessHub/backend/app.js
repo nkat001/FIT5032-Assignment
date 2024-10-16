@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer";
 dotenv.config();
-
+import { GoogleGenerativeAI } from "@google/generative-ai";
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
@@ -74,7 +74,7 @@ app.post("/send-bulk-email", async (req, res) => {
     const { recipients, subject, message } = req.body;
 
     // Create an array to hold the messages for each recipient
-    const messages = recipients.map(email => ({
+    const messages = recipients.map((email) => ({
       From: {
         Email: process.env.SENDER_EMAIL,
         Name: process.env.SENDER_NAME,
