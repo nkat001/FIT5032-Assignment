@@ -9,9 +9,9 @@
 
     <!-- DataTable for users -->
     <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3 text-center mb-5">
-        <DataTable :value="filteredUsers" v-model:selection="selectedUsers" ref="dt" showGridlines stripedRows
-            removableSort paginator :tableStyle="tableStyle" :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]"
-            :rowClass="getRowClass" table-style="min-width:50rem max-width:100rem">
+        <DataTable :value="filteredUsers" v-model:selection="selectedUsers" ref="dt" showGridlines removableSort
+            paginator :tableStyle="tableStyle" :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" :rowClass="getRowClass"
+            table-style="min-width:50rem max-width:100rem" class="table-hover">
 
             <!-- Name, Email, and Type Columns -->
             <Column field="username" header="Name" sortable style="width: 20%"></Column>
@@ -151,3 +151,9 @@ onMounted(() => {
     fetchUsers();
 });
 </script>
+
+<style>
+.table-hover tbody tr:hover {
+    background-color: #e0dfdf;
+}
+</style>

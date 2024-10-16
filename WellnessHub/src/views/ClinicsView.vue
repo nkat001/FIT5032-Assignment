@@ -1,9 +1,16 @@
 <template>
     <div class="clinic-table">
         <h1 class="mt-5 text-center">Clinics</h1>
+
+        <!-- Search Input -->
+        <div class="text-center mt-5">
+            <input type="text" v-model="searchQuery" placeholder="Search clinics by name or address..."
+                class="form-control" style="width: 50%; margin: auto;" />
+        </div>
+
         <div class="m-5">
-            <DataTable :value="clinics" tableStyle="min-width: 50rem" :tableStyle="tableStyle" paginator stripedRows
-                removableSort :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+            <DataTable :value="filteredClinics" tableStyle="min-width: 50rem" :tableStyle="tableStyle" paginator
+                removableSort :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" class="table-hover">
                 <Column field="name" header="Clinic Name" sortable />
                 <Column field="address" header="Address" />
                 <Column header="Image">
@@ -26,6 +33,7 @@
     </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import DataTable from 'primevue/datatable';
@@ -39,6 +47,7 @@ import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const clinics = ref([]);
+const searchQuery = ref('');
 const size = ref({ label: 'Normal', value: 'null' });
 let directions;
 let currentLatitude;
@@ -54,6 +63,15 @@ const tableStyle = computed(() => {
         default:
             return { 'font-size': '14px' };
     }
+});
+
+// Computed property for filtered clinics based on search query
+const filteredClinics = computed(() => {
+    if (!searchQuery.value) return clinics.value;
+    return clinics.value.filter(clinic => {
+        return clinic.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            clinic.address.toLowerCase().includes(searchQuery.value.toLowerCase());
+    });
 });
 
 onMounted(async () => {
@@ -131,6 +149,7 @@ const getDirections = async (clinic) => {
 }
 </script>
 
+
 <style scoped>
 .clinic-image {
     width: 130px;
@@ -140,6 +159,10 @@ const getDirections = async (clinic) => {
 
 .image-description {
     font-style: italic;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e0dfdf;
 }
 
 #map {
