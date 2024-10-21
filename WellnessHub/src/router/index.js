@@ -44,18 +44,26 @@ const routes = [
     path: "/send-email",
     name: "SendEmail",
     component: EmailView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/send-bulk-emails",
     name: "SendBulkEmails",
     component: BulkEmailsView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/clinics",
     name: "Clinics",
     component: ClinicsView,
+    meta: { requiresAuth: true },
   },
-  { path: "/users", name: "Users", component: AdminDashboardView },
+  {
+    path: "/users",
+    name: "Users",
+    component: AdminDashboardView,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
@@ -64,13 +72,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  let isAuthenticated = false;
   const auth = getAuth();
-
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        isAuthenticated = true;
         next();
       } else {
         next("/firebase-login");
