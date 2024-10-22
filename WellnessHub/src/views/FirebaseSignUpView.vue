@@ -160,7 +160,7 @@ const signUp = () => {
                     router.push('/firebase-login')
                 }).catch((error) => {
                     console.log("Error occured: ", error);
-                    alert('Error signing up')
+                    alert('Email already in use')
                 })
         }
     } catch (error) {
