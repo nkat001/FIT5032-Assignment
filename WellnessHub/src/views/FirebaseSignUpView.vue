@@ -159,8 +159,13 @@ const signUp = () => {
                     // window.location.href = '/login'
                     router.push('/firebase-login')
                 }).catch((error) => {
-                    console.log("Error occured: ", error);
-                    alert('Email already in use')
+                    // Handle Firebase error for existing email
+                    if (error.code === 'auth/email-already-in-use') {
+                        errors.value.email = 'Email is already in use. Please use a different email.';
+                    } else {
+                        console.log('Error occurred: ', error);
+                        alert('An error occurred during signup. Please try again.');
+                    }
                 })
         }
     } catch (error) {
